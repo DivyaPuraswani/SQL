@@ -1,0 +1,135 @@
+Leetcode Problem: The Winner University
+Problem Number: 2072
+Level: Easy
+
+Table: NewYork
+
++-------------+------+
+| Column Name | Type |
++-------------+------+
+| student_id  | int  |
+| score       | int  |
++-------------+------+
+student_id is the primary key for this table.
+Each row contains information about the score of one student from New York University in an exam.
+ 
+
+Table: California
+
++-------------+------+
+| Column Name | Type |
++-------------+------+
+| student_id  | int  |
+| score       | int  |
++-------------+------+
+student_id is the primary key for this table.
+Each row contains information about the score of one student from California University in an exam.
+
+There is a competition between New York University and California University. The competition is held between the same number of students from both universities. The university that has more excellent students wins the competition. If the two universities have the same number of excellent students, the competition ends in a draw.
+
+An excellent student is a student that scored 90% or more in the exam.
+
+Write an SQL query to report:
+
+"New York University" if New York University wins the competition.
+"California University" if California University wins the competition.
+"No Winner" if the competition ends in a draw.
+The query result format is in the following example.
+
+ 
+
+Example 1:
+
+Input: 
+NewYork table:
++------------+-------+
+| student_id | score |
++------------+-------+
+| 1          | 90    |
+| 2          | 87    |
++------------+-------+
+California table:
++------------+-------+
+| student_id | score |
++------------+-------+
+| 2          | 89    |
+| 3          | 88    |
++------------+-------+
+Output: 
++---------------------+
+| winner              |
++---------------------+
+| New York University |
++---------------------+
+Explanation:
+New York University has 1 excellent student, and California University has 0 excellent students.
+Example 2:
+
+Input: 
+NewYork table:
++------------+-------+
+| student_id | score |
++------------+-------+
+| 1          | 89    |
+| 2          | 88    |
++------------+-------+
+California table:
++------------+-------+
+| student_id | score |
++------------+-------+
+| 2          | 90    |
+| 3          | 87    |
++------------+-------+
+Output: 
++-----------------------+
+| winner                |
++-----------------------+
+| California University |
++-----------------------+
+Explanation:
+New York University has 0 excellent students, and California University has 1 excellent student.
+Example 3:
+
+Input: 
+NewYork table:
++------------+-------+
+| student_id | score |
++------------+-------+
+| 1          | 89    |
+| 2          | 90    |
++------------+-------+
+California table:
++------------+-------+
+| student_id | score |
++------------+-------+
+| 2          | 87    |
+| 3          | 99    |
++------------+-------+
+Output: 
++-----------+
+| winner    |
++-----------+
+| No Winner |
++-----------+
+Explanation:
+Both New York University and California University have 1 excellent student.
+
+Solution:
+
+WITH newyork_count AS 
+(SELECT COUNT(student_id) AS ncnt FROM NewYork WHERE score >= 90),
+cali_count AS (SELECT COUNT(student_id) AS cant FROM California WHERE score >=90)
+
+SELECT 
+( CASE WHEN ncnt>cant THEN 'New York University'
+    WHEN cant > ncnt THEN 'California University'
+    ELSE 'No Winner'
+ END
+) AS winner FROM newyork_count,cali_count;
+
+Concept: Using WITH clause we can store temporary dataset whose output is not stored but used for reference in subsequent
+queries.As here the outputs for two tables are stored temporarily in newyork_count and cali_count which than is used in 
+CASE statement as IF-ELSE-IF statement.
+
+reference link https://www.geeksforgeeks.org/sql-with-clause/ and https://learnsql.com/blog/what-is-with-clause-sql/
+
